@@ -8,13 +8,15 @@ const resolvers = require('./GraphQL/Resolvers/index');
 
 // models
 const UserModel = require('./Models/UserModel');
+const SnapModel = require('./Models/SnapModel');
 
 async function initializeApolloServer() {
     const server = new ApolloServer({
         typeDefs: importSchema('./GraphQL/schema.graphql'),
         resolvers,
         context: {
-            UserModel
+            UserModel,
+            SnapModel
         }
     });
 

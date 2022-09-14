@@ -1,2 +1,5 @@
 # import Query from './Types/user.type.graphql'
 # import Mutation from './Types/user.type.graphql'
+
+# import Query from './Types/snap.type.graphql'
+# import Mutation from './Types/snap.type.graphql'
