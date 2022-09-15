@@ -1,9 +1,10 @@
 import {memo} from "react";
 
-const FormComponent = ({children}) => {
+const FormComponent = (props) => {
+    const {children} = props;
     return (
         <div>
-            <form className="user-form">
+            <form {...props}>
                 {children}
             </form>
         </div>

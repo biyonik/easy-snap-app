@@ -1,12 +1,12 @@
 import {memo} from "react";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 const HeaderMenuComponent = () => {
     return (
         <div className="header_menu">
-            <Link to="/">Home</Link>
-            <Link to="login">Login</Link>
-            <Link to="join">Join</Link>
+            <NavLink to="/" end>Home</NavLink>
+            <NavLink to="login">Login</NavLink>
+            <NavLink to="join">Join</NavLink>
         </div>
     )
 }

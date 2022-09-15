@@ -1,6 +1,7 @@
 import {memo} from "react";
 
-const ButtonGroupComponent = ({children}, props) => {
+const ButtonGroupComponent = (props) => {
+    const {children} = props;
     return (
         <label>
             <button {...props}>
