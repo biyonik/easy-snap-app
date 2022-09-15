@@ -1,4 +1,4 @@
-import {memo, useState} from "react";
+import {memo, useEffect, useState} from "react";
 import FormComponent from "../../Components/Form/form.component";
 import InputGroupComponent from "../../Components/InputGroup/input-group.component";
 import ButtonGroupComponent from "../../Components/ButtonGroup/button-group.component";
@@ -6,6 +6,8 @@ import {CREATE_USER_MUTATION} from "../../Mutations/User/user.mutation";
 import {useMutation} from "react-apollo";
 import ErrorComponent from "../../Components/Error/error.component";
 import LoadingComponent from "../../Components/Loading/loading.component";
+import {useAuthContext} from "../../Contexts/auth.context";
+import {useNavigate} from 'react-router-dom';
 
 const JoinPage = () => {
     const [username, setUsername] = useState('');
@@ -17,6 +19,16 @@ const JoinPage = () => {
             password: password
         }
     });
+    const {token, setToken} = useAuthContext();
+    const navigate = useNavigate();
+    useEffect(() => {
+        const isTokenExists = localStorage.getItem('token');
+        if (isTokenExists) {
+            setToken(isTokenExists);
+            navigate('/');
+        }
+    }, []);
+
 
     const isFormValidate = () => {
         const isInvalid = !username || !password || !passwordConfirm || password !== passwordConfirm;
@@ -32,7 +44,9 @@ const JoinPage = () => {
     const handleSubmit = async e => {
         e.preventDefault();
         const {data: {createUser: {token}}} = await createUser();
-        console.log(token);
+        localStorage.setItem('token', token);
+        setToken(token);
+        navigate('/');
         clearAllFormFields();
     }
 

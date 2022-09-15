@@ -3,6 +3,7 @@ require('dotenv').config();
 const {ApolloServer} = require('apollo-server-express')
 const {importSchema} = require('graphql-import');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const resolvers = require('./GraphQL/Resolvers/index');
 
@@ -29,6 +30,17 @@ async function initializeApolloServer() {
         .catch(err => console.log(err));
 
     await server.start();
+    app.use(async (requestObject, responseObject, nextFunction) => {
+        const token = requestObject.headers['authorization'];
+        if (token && token !== 'null') {
+            try {
+                const activeUser = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+            } catch (e) {
+                throw new Error(e);
+            }
+        }
+        nextFunction();
+    })
     server.applyMiddleware({app});
 
     app.listen({port: 4000}, () => {
