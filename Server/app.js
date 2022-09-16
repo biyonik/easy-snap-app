@@ -15,10 +15,11 @@ async function initializeApolloServer() {
     const server = new ApolloServer({
         typeDefs: importSchema('./GraphQL/schema.graphql'),
         resolvers,
-        context: {
+        context: ({requestObject}) => ({
             UserModel,
-            SnapModel
-        }
+            SnapModel,
+            activeUser: requestObject.activeUser
+        })
     });
 
     const app = express();
@@ -31,10 +32,11 @@ async function initializeApolloServer() {
 
     await server.start();
     app.use(async (requestObject, responseObject, nextFunction) => {
-        const token = requestObject.headers['authorization'];
+        const token = requestObject.headers.authorization;
         if (token && token !== 'null') {
             try {
                 const activeUser = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+                request.activeUser = activeUser;
             } catch (e) {
                 throw new Error(e);
             }
