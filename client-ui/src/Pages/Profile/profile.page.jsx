@@ -13,7 +13,7 @@ const ProfilePage = () => {
         const isTokenExists = localStorage.getItem('token');
         if (!isTokenExists) {
             setToken('');
-            navigate('/');
+            navigate('/login');
         }
     }, []);
     const activeUser = useActiveUser();

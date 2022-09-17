@@ -1,44 +1,32 @@
 import {memo} from "react";
 import {useActiveUser} from "../../Hooks/useActiveUser";
+import HomeDescriptionComponent from "../../Components/Home/Description/home-description.component";
+import AddSnapComponent from "../../Components/Snap/Add/add-snap.component";
+import SnapCounterComponent from "../../Components/Snap/Counter/snap-counter.component";
+import SnapListComponent from "../../Components/Snap/List/snap-list.component";
+import {useQuery} from "react-apollo";
+import {GET_SNAPS} from "../../Queries/Snap/snap.query";
+import LoadingComponent from "../../Components/Loading/loading.component";
+import ErrorComponent from "../../Components/Error/error.component";
 
 const HomePage = () => {
     const activeUser = useActiveUser();
+    const {loading, error, data} = useQuery(GET_SNAPS);
+    if (loading) return <LoadingComponent />
+    if (error) return <ErrorComponent message={error.message} />
+    const {snaps} = data;
 
     return (
         <>
-            {activeUser?.username}
-            <div className="description">
-                <p className="sub_header__desc">simple snap app with <span>react</span>.</p>
-            </div>
+            <HomeDescriptionComponent>
+                simple snap app with <span>react</span>.
+            </HomeDescriptionComponent>
 
-            <div>
-                <form>
-                    <input className="add-snap__input" type="text" placeholder="add snap"/>
-                </form>
-            </div>
-            <div>
-                <ul className="snaps">
-                    <li>
-                        <div className="title">Lorem ipsum dolor sit amet</div>
-                        <div className="date">
-                            <span>now</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="title">Curabitur gravida arcu ac tortor dignissim.</div>
-                        <div className="date">
-                            <span>5 minutes ago</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="title">Tristique risus nec feugiat in fermentum.</div>
-                        <div className="date">
-                            <span>7 minutes ago</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div className="counter">3 snap(s)</div>
+            {activeUser && (
+                <AddSnapComponent />
+            )}
+            <SnapListComponent snaps={snaps} />
+            <SnapCounterComponent count={snaps.length} />
         </>
     )
 }
