@@ -5,9 +5,8 @@ const Query = {
     users: async (parent, args, {UserModel}) => {
         return await UserModel.find({}).sort({'createdAt': 'desc'})
     },
-    activeUser: async(parent, args, {activeUser, UserModel}) => {
-        if (!activeUser) return null;
-        return await UserModel.findOne({username: activeUser.username});
+    activeUser: async(parent, args, {UserModel}) => {
+        return await UserModel.findById(args.id);
     },
     snap: async (parent, args, {SnapModel}) => {
         return await SnapModel.findById(args.id)

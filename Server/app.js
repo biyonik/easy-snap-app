@@ -18,7 +18,7 @@ async function initializeApolloServer() {
         context: ({requestObject}) => ({
             UserModel,
             SnapModel,
-            activeUser: requestObject.activeUser
+            activeUser: requestObject?.activeUser
         })
     });
 
@@ -35,8 +35,7 @@ async function initializeApolloServer() {
         const token = requestObject.headers.authorization;
         if (token && token !== 'null') {
             try {
-                const activeUser = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-                request.activeUser = activeUser;
+                requestObject.activeUser = await jwt.verify(token, process.env.JWT_SECRET_KEY);
             } catch (e) {
                 throw new Error(e);
             }

@@ -8,6 +8,7 @@ import LoadingComponent from "../../Components/Loading/loading.component";
 import ErrorComponent from "../../Components/Error/error.component";
 import {useAuthContext} from "../../Contexts/auth.context";
 import {useNavigate} from "react-router-dom";
+import {decodeToken} from "react-jwt";
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -19,7 +20,7 @@ const LoginPage = () => {
             password
         }
     });
-    const {setToken} = useAuthContext();
+    const {setToken, setActiveUser} = useAuthContext();
     const navigate = useNavigate();
     useEffect(() => {
         const isTokenExists = localStorage.getItem('token');
@@ -42,8 +43,10 @@ const LoginPage = () => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const {data: {signIn: {token}}} =await signIn();
+        const {data: {signIn: {token}}} = await signIn();
         localStorage.setItem('token', token);
+        const decodedToken = decodeToken(token);
+        setActiveUser(decodedToken);
         setToken(token);
         navigate('/');
         clearAllFormFields();

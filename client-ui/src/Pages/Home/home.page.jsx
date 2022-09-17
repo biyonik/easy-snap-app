@@ -1,8 +1,12 @@
 import {memo} from "react";
+import {useActiveUser} from "../../Hooks/useActiveUser";
 
 const HomePage = () => {
+    const activeUser = useActiveUser();
+
     return (
         <>
+            {activeUser?.username}
             <div className="description">
                 <p className="sub_header__desc">simple snap app with <span>react</span>.</p>
             </div>

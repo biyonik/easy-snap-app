@@ -17,7 +17,7 @@ module.exports = {
         }
     },
     signIn: async (parent, {data: {username, password}}, {UserModel}) => {
-        const userIsExists = await UserModel.findOne({username})
+        const userIsExists = await UserModel.findOne({username});
         if (!userIsExists) {
             throw new Error('Böyle bir kullanıcı bulunamadı!')
         }
@@ -25,8 +25,13 @@ module.exports = {
         const validPassword = await bcrypt.compare(password, userIsExists.password);
         if (!validPassword) throw new Error('Parola hatalı!');
 
+        const tokenData = {
+            id: userIsExists._id,
+            username: userIsExists.username,
+            createdAt: userIsExists.createdAt
+        };
         return {
-            token: token.generate(userIsExists, '1h')
+            token: token.generate(tokenData, '1h')
         }
 
     }

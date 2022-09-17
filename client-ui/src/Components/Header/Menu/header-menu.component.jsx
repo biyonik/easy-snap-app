@@ -1,19 +1,22 @@
 import {memo, useEffect} from "react";
 import {NavLink} from "react-router-dom";
 import {useAuthContext} from "../../../Contexts/auth.context";
+import {useNavigate} from 'react-router-dom';
 
 const HeaderMenuComponent = () => {
-    const {token, setToken} = useAuthContext();
+    const {token, setToken, setActiveUser} = useAuthContext();
     useEffect(() => {
         const t = localStorage.getItem('token');
         setToken(t);
-    }, );
+    });
+    const navigate = useNavigate();
 
 
     const handleLogOut = () => {
         localStorage.removeItem('token');
         setToken('');
-
+        setActiveUser(null);
+        navigate('login');
     }
 
     return (
@@ -26,7 +29,10 @@ const HeaderMenuComponent = () => {
                 </>
             )}
             {token && (
-                <a onClick={handleLogOut}>Logout</a>
+                <>
+                    <NavLink to="profile">Profile</NavLink>
+                    <a onClick={handleLogOut}>Logout</a>
+                </>
             )}
         </div>
     )
